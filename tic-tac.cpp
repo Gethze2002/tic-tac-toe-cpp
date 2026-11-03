@@ -24,7 +24,6 @@ void mostrarTablero() {
     cout << "\n";
 }
 
-// Funcion para colocar la ficha y validar si la casilla es valida y esta libre
 bool marcarCasilla(int opcion) {
     int fila = (opcion - 1) / 3;
     int col = (opcion - 1) % 3;
@@ -43,7 +42,6 @@ bool marcarCasilla(int opcion) {
     return true;
 }
 
-// Cambiar de turno entre X y O
 void cambiarTurno() {
     if (turnoActual == 'X') {
         turnoActual = 'O';
@@ -52,20 +50,36 @@ void cambiarTurno() {
     }
 }
 
-int main() {
-    inicializarTablero();
-    int jugada;
-
-    // Prueba simple de turnos
+// Revisa filas, columnas y diagonales para ver si alguien gano
+bool verificarGanador() {
     for (int i = 0; i < 3; i++) {
-        mostrarTablero();
-        cout << "Turno del Jugador " << turnoActual << ". Ingresa casilla: ";
-        cin >> jugada;
-        if (marcarCasilla(jugada)) {
-            cambiarTurno();
+        // Filas
+        if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2]) return true;
+        // Columnas
+        if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i]) return true;
+    }
+    // Diagonales
+    if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2]) return true;
+    if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0]) return true;
+
+    return false;
+}
+
+// Verifica si ya no quedan casillas libres
+bool hayEmpate() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (tablero[i][j] != 'X' && tablero[i][j] != 'O') {
+                return false;
+            }
         }
     }
+    return true;
+}
 
+int main() {
+    inicializarTablero();
     mostrarTablero();
+    cout << "Tablero y funciones de comprobacion de ganador listas.\n";
     return 0;
 }
