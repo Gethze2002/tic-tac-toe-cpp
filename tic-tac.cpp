@@ -29,12 +29,12 @@ bool marcarCasilla(int opcion) {
     int col = (opcion - 1) % 3;
 
     if (opcion < 1 || opcion > 9) {
-        cout << "Numero fuera de rango. Elige del 1 al 9.\n";
+        cout << "Casilla invalida. Elige un numero del 1 al 9.\n";
         return false;
     }
 
     if (tablero[fila][col] == 'X' || tablero[fila][col] == 'O') {
-        cout << "Casilla ocupada, intenta otra.\n";
+        cout << "Esa casilla ya esta ocupada. Elige otra.\n";
         return false;
     }
 
@@ -50,22 +50,17 @@ void cambiarTurno() {
     }
 }
 
-// Revisa filas, columnas y diagonales para ver si alguien gano
 bool verificarGanador() {
     for (int i = 0; i < 3; i++) {
-        // Filas
         if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2]) return true;
-        // Columnas
         if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i]) return true;
     }
-    // Diagonales
     if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2]) return true;
     if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0]) return true;
 
     return false;
 }
 
-// Verifica si ya no quedan casillas libres
 bool hayEmpate() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -78,8 +73,41 @@ bool hayEmpate() {
 }
 
 int main() {
-    inicializarTablero();
-    mostrarTablero();
-    cout << "Tablero y funciones de comprobacion de ganador listas.\n";
+    char jugarDeNuevo;
+
+    do {
+        inicializarTablero();
+        turnoActual = 'X';
+        bool finJuego = false;
+
+        cout << "=== BIENVENIDO A TIC TAC TOE (GATO) ===\n";
+
+        while (!finJuego) {
+            mostrarTablero();
+            int eleccion;
+            cout << "Turno del Jugador [" << turnoActual << "]. Ingresa casilla (1-9): ";
+            cin >> eleccion;
+
+            if (marcarCasilla(eleccion)) {
+                if (verificarGanador()) {
+                    mostrarTablero();
+                    cout << "¡Felicidades! El jugador " << turnoActual << " ha ganado.\n";
+                    finJuego = true;
+                } else if (hayEmpate()) {
+                    mostrarTablero();
+                    cout << "¡Es un empate! El tablero se ha llenado.\n";
+                    finJuego = true;
+                } else {
+                    cambiarTurno();
+                }
+            }
+        }
+
+        cout << "¿Deseas jugar otra partida? (s/n): ";
+        cin >> jugarDeNuevo;
+
+    } while (jugarDeNuevo == 's' || jugarDeNuevo == 'S');
+
+    cout << "Gracias por jugar.\n";
     return 0;
 }
